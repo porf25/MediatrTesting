@@ -26,10 +26,6 @@ builder.Services.AddSwaggerGen(x =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey
     }, Array.Empty<string>());
-    //var secutiry = new Dictionary<string, IEnumerable<string>>
-    //{
-    //    { "Bearer", new string[0] }
-    //};
 
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
     {
