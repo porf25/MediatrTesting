@@ -7,3 +7,4 @@ global using GoofinApi.Repositories;
 global using MediatR.Pipeline;
 global using GoofinApi.Processors;
 global using Microsoft.AspNetCore.Mvc;
+global using GoofinApi.Options;

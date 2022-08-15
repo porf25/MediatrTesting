@@ -1,4 +1,11 @@
 
+
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,10 +16,57 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x =>
+{
+    var security = new OpenApiSecurityRequirement();
+    security.Add(new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the bearer scheme",
+        Name = "Bearer",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    }, Array.Empty<string>());
+    //var secutiry = new Dictionary<string, IEnumerable<string>>
+    //{
+    //    { "Bearer", new string[0] }
+    //};
+
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
+    {
+        Description = "JWT Authorization header using the bearer scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
+    x.AddSecurityRequirement(security);
+});
 builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddScoped(typeof(IRequestPostProcessor<,>), typeof(TestPostProcessor<,>));
 builder.Services.AddTransient<ITestRepo, TestRepo>();
+
+var jwtSettings = new JwtSettings();
+builder.Configuration.Bind(nameof(jwtSettings), jwtSettings);
+builder.Services.AddSingleton(jwtSettings);
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(x =>
+    {
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RequireExpirationTime = false,
+            ValidateLifetime = true,
+        };
+    });
 
 var app = builder.Build();
 
@@ -26,6 +80,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
