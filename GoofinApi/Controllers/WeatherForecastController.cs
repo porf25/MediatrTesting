@@ -1,5 +1,7 @@
 
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace GoofinApi.Controllers
 {
     [ApiController]
@@ -34,6 +36,7 @@ namespace GoofinApi.Controllers
 
         [HttpGet]
         [Route("GetPorfsForecast")]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             var result = await _mediator.Send(new GetAllForecastQuery());

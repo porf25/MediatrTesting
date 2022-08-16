@@ -29,5 +29,14 @@ namespace GoofinApi.Controllers
             return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(201);
         }
 
+        [HttpPost("login")]
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> Authenticate([FromBody] UserLoginDto user)
+        {
+            return !await _repo.VerifyUserAsync(user)
+                ? Unauthorized()
+                : Ok(new { Token = await _repo.CreateTokenAsync() });
+        }
+
     }
 }
