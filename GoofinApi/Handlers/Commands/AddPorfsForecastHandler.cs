@@ -5,11 +5,11 @@ namespace GoofinApi.Handlers
     public class AddPorfsForecastHandler : IRequestHandler<AddPorfsForecastCommand, PorfForecast>
     {
         private readonly ITestRepo _testRepo;
-        private PorfContext _context;
-        public AddPorfsForecastHandler(ITestRepo testRepo, PorfContext context)
+        private readonly PorfForecastRepository _repo;
+        public AddPorfsForecastHandler(ITestRepo testRepo, PorfForecastRepository repo)
         {
             _testRepo = testRepo;
-            _context = context;
+            _repo = repo;
         }
 
         public async Task<PorfForecast> Handle(AddPorfsForecastCommand request, CancellationToken cancellationToken)
@@ -22,8 +22,7 @@ namespace GoofinApi.Handlers
                 Message = $"Hey man, its {request.Name}.. dale"
             };
 
-            await _context.PorfForecasts.AddAsync(cast, cancellationToken);
-            return cast;
+            return await _repo.Add(cast);
         }
     }
 }

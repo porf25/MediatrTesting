@@ -1,9 +1,9 @@
-namespace GoofinApi
+
+namespace GoofinApi;
+
+public class PorfForecast : IEntity
 {
-    public class PorfForecast
-    {
-        public Guid Id { get; set; }
-        public string? Message { get; set; }
-        public int Age => 38;
-    }
+    public Guid Id { get; set; }
+    public string? Message { get; set; }
+    public int Age => 38;
 }

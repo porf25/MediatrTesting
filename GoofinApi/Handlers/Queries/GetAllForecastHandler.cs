@@ -3,15 +3,15 @@ namespace GoofinApi.Handlers.Queries
 {
     public class GetAllForecastHandler : IRequestHandler<GetAllForecastQuery, List<PorfForecast>>
     {
-        private PorfContext _context;
-        public GetAllForecastHandler(PorfContext context)
+        private PorfForecastRepository _repo;
+        public GetAllForecastHandler(PorfForecastRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         public async Task<List<PorfForecast>> Handle(GetAllForecastQuery request, CancellationToken cancellationToken)
         {
-            var forecasts = await _context.PorfForecasts.AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
+            var forecasts = await _repo.GetAll();
             return forecasts;
         }
     }

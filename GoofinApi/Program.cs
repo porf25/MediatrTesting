@@ -1,10 +1,3 @@
-
-
-
-using AutoMapper;
-using GoofinApi.Mappings;
-using GoofinApi.Models;
-using GoofinApi.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -86,6 +79,7 @@ builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddScoped(typeof(IRequestPostProcessor<,>), typeof(TestPostProcessor<,>));
 builder.Services.AddTransient<ITestRepo, TestRepo>();
 builder.Services.AddTransient<IUserAuthenticationRepository, UserAuthenticationRepository>();
+builder.Services.AddScoped<PorfForecastRepository>();
 
 var mapperConfig = new MapperConfiguration(map =>
 {
