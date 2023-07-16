@@ -2,6 +2,7 @@
 
 using GoofinApi.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoofinApi.Context
 {

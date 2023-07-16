@@ -1,4 +1,6 @@
-﻿namespace TestApi.Data
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TestApi.Data
 {
     public abstract class Repository<TEntity, TContext> : IRepository<TEntity> where TEntity : class, IEntity where TContext : DbContext
     {
